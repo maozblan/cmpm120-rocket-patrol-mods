@@ -20,13 +20,15 @@ class Play extends Phaser.Scene {
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0)
 
         // them spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0)
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0)
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0)
+        this.ship01 = new Spaceship(this, game.config.width + borderUISize*4, borderUISize*5 + borderPadding*2, 'spaceship', 0, 30, game.settings.spaceshipSpeed).setOrigin(0, 0)
+        this.ship02 = new Spaceship(this, game.config.width + borderUISize*2, borderUISize*6 + borderPadding*3, 'spaceship', 0, 20, game.settings.spaceshipSpeed).setOrigin(0,0)
+        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*7, 'spaceship', 0, 10, game.settings.spaceshipSpeed).setOrigin(0,0)
+        // fancy ship (x1)
+        this.ship04 = new Spaceship(this, game.config.width + borderUISize*8, borderUISize*4, 'fancySpaceship', 0, 70, game.settings.spaceshipSpeed*1.5).setOrigin(0,0)
 
         // initialize score
         this.p1Score = 0
-        let scoreConfig = {
+        let textConfig = {
             fontFamily: 'Courier',
             fontSize: '26px',
             backgroundColor: '#F3B141',
@@ -38,17 +40,23 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig)
-
+        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, textConfig)
+        
         // game over check
         this.gameOver = false
+
         // 60 sec clock
-        scoreConfig.fixedWidth = 0
+        textConfig.fixedWidth = 0
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5)
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5)
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', textConfig).setOrigin(0.5)
+            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', textConfig).setOrigin(0.5)
             this.gameOver = true
         }, null, this)
+        
+        // display clock
+        textConfig.fixedWidth = 100
+        textConfig.align = 'center'
+        this.scoreLeft = this.add.text(game.config.width/2, borderUISize + borderPadding*2, this.p1Score, textConfig).setOrigin(0.5, 0)
     }
 
     update() {
@@ -76,9 +84,14 @@ class Play extends Phaser.Scene {
             this.ship01.update()
             this.ship02.update()
             this.ship03.update()
+            this.ship04.update()
         }
     
         // check collisions
+        if(this.checkCollision(this.p1Rocket, this.ship04)) {
+            this.p1Rocket.reset()
+            this.shipExplode(this.ship04)
+        }
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset()
             this.shipExplode(this.ship03)
