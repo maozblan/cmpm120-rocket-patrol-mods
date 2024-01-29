@@ -45,21 +45,28 @@ class Play extends Phaser.Scene {
         // game over check
         this.gameOver = false
 
-        // 60 sec clock
-        textConfig.fixedWidth = 0
-        this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', textConfig).setOrigin(0.5)
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', textConfig).setOrigin(0.5)
-            this.gameOver = true
-        }, null, this)
-        
-        // display clock
-        textConfig.fixedWidth = 100
+        // clock
+        this.secondsRemaining = game.settings.gameTimer
+        console.log(this.secondsRemaining)
+        // styling
         textConfig.align = 'center'
-        this.scoreLeft = this.add.text(game.config.width/2, borderUISize + borderPadding*2, this.p1Score, textConfig).setOrigin(0.5, 0)
+        textConfig.color = '#009900'
+        textConfig.backgroundColor = '#00FF00'
+        this.clockText = this.add.text(game.config.width/2, borderUISize + borderPadding*2, this.secondsRemaining, textConfig).setOrigin(0.5, 0)
+        this.clock = this.time.addEvent({
+            delay: 1000,    // 1 second = 1000 milliseconds
+            loop: true,
+            startAt: 0,
+            callback: this.updateClock,
+            callbackScope: this,
+        })
     }
 
     update() {
+        // check for game over
+        if (this.gameOver) {
+            this.gameOverScreen()
+        }
         // check for restart
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyRESET)) {
             this.scene.restart()
@@ -134,5 +141,35 @@ class Play extends Phaser.Scene {
         this.scoreLeft.text = this.p1Score
         // sfx
         this.sound.play('sfx-explosion')
+    }
+
+    // display screen for game over
+    gameOverScreen() {
+        let textConfig = {
+            fontFamily: 'Courier',
+            fontSize: '26px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 0
+        }
+        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', textConfig).setOrigin(0.5)
+        this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', textConfig).setOrigin(0.5)
+    }
+
+    // update the timer with x number of seconds
+    updateClock(seconds=-1) {
+        if (this.secondsRemaining > 0) {
+        this.secondsRemaining += seconds
+        this.clockText.text = this.secondsRemaining
+        }
+        // check game over
+        if (this.secondsRemaining <= 0) {
+            this.gameOver = true
+        }
     }
 }
