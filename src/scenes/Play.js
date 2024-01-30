@@ -58,6 +58,11 @@ class Play extends Phaser.Scene {
             startAt: 0,
             callback: this.updateClock,
             callbackScope: this,
+        });
+    
+        // check collisions
+        [this.ship01, this.ship02, this.ship03, this.ship04].forEach(ship => {
+            this.physics.add.collider(this.p1Rocket, ship, this.shipsCollided, null, this)
         })
     }
 
@@ -92,15 +97,6 @@ class Play extends Phaser.Scene {
             this.ship03.update()
             this.ship04.update()
         }
-    
-        // check collisions
-        [this.ship01, this.ship02, this.ship03, this.ship04].forEach(ship => {
-            if (this.checkCollision(this.p1Rocket, ship)) {
-                this.p1Rocket.reset('hit')
-                this.shipExplode(ship)
-                this.updateClock(1)     // +1 seconds on hit
-            }
-        })
 
         // reset rocket on miss
         if (this.p1Rocket.y <= borderUISize * 3 + borderPadding) {
@@ -172,5 +168,12 @@ class Play extends Phaser.Scene {
         if (this.secondsRemaining <= 0) {
             this.gameOver = true
         }
+    }
+
+    // handle collision
+    shipsCollided(rocket, ship) {
+        rocket.reset('hit')
+        this.shipExplode(ship)
+        this.updateClock(2)
     }
 }

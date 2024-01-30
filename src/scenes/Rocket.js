@@ -4,6 +4,7 @@ class Rocket extends Phaser.GameObjects.Sprite {
         super(scene, x, y, texture, frame)
 
         // add to scene 
+        scene.physics.add.existing(this)
         scene.add.existing(this)
 
         // some data about it
