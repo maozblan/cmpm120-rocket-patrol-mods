@@ -20,11 +20,11 @@ class Play extends Phaser.Scene {
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0)
 
         // them spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*4, borderUISize*5 + borderPadding*2, 'spaceship', 0, 30, game.settings.spaceshipSpeed).setOrigin(0, 0)
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*2, borderUISize*6 + borderPadding*3, 'spaceship', 0, 20, game.settings.spaceshipSpeed).setOrigin(0,0)
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*7, 'spaceship', 0, 10, game.settings.spaceshipSpeed).setOrigin(0,0)
+        this.ship01 = new Spaceship(this, game.config.width + borderUISize*4, borderUISize*5, 'spaceship', 0, 30, game.settings.spaceshipSpeed).setOrigin(0, 0)
+        this.ship02 = new Spaceship(this, game.config.width + borderUISize*2, borderUISize*6 + borderPadding, 'spaceship', 0, 20, game.settings.spaceshipSpeed).setOrigin(0,0)
+        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*5, 'spaceship', 0, 10, game.settings.spaceshipSpeed).setOrigin(0,0)
         // fancy ship (x1)
-        this.ship04 = new Spaceship(this, game.config.width + borderUISize*8, borderUISize*4, 'fancySpaceship', 0, 70, game.settings.spaceshipSpeed*1.5).setOrigin(0,0)
+        this.ship04 = new Spaceship(this, game.config.width + borderUISize*8, borderUISize*3.75, 'fancySpaceship', 0, 70, game.settings.spaceshipSpeed*1.25).setOrigin(0,0)
 
         // initialize score
         this.p1Score = 0
@@ -47,7 +47,6 @@ class Play extends Phaser.Scene {
 
         // clock
         this.secondsRemaining = game.settings.gameTimer
-        console.log(this.secondsRemaining)
         // styling
         textConfig.align = 'center'
         textConfig.color = '#009900'
@@ -95,21 +94,18 @@ class Play extends Phaser.Scene {
         }
     
         // check collisions
-        if(this.checkCollision(this.p1Rocket, this.ship04)) {
+        [this.ship01, this.ship02, this.ship03, this.ship04].forEach(ship => {
+            if (this.checkCollision(this.p1Rocket, ship)) {
+                this.p1Rocket.reset('hit')
+                this.shipExplode(ship)
+                this.updateClock(1)     // +1 seconds on hit
+            }
+        })
+
+        // reset rocket on miss
+        if (this.p1Rocket.y <= borderUISize * 3 + borderPadding) {
             this.p1Rocket.reset()
-            this.shipExplode(this.ship04)
-        }
-        if(this.checkCollision(this.p1Rocket, this.ship03)) {
-            this.p1Rocket.reset()
-            this.shipExplode(this.ship03)
-        }
-        if (this.checkCollision(this.p1Rocket, this.ship02)) {
-            this.p1Rocket.reset()
-            this.shipExplode(this.ship02)
-        }
-        if (this.checkCollision(this.p1Rocket, this.ship01)) {
-            this.p1Rocket.reset()
-            this.shipExplode(this.ship01)
+            this.updateClock(-5)        // -5 seconds on miss
         }
     }
 
@@ -165,7 +161,12 @@ class Play extends Phaser.Scene {
     updateClock(seconds=-1) {
         if (this.secondsRemaining > 0) {
         this.secondsRemaining += seconds
-        this.clockText.text = this.secondsRemaining
+        // prevent seconds remaining from going under 5
+        if (this.secondsRemaining > 0) {
+            this.clockText.text = this.secondsRemaining
+        } else {
+            this.clockText.text = 0
+        }
         }
         // check game over
         if (this.secondsRemaining <= 0) {
