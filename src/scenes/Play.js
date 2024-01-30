@@ -5,7 +5,9 @@ class Play extends Phaser.Scene {
     
     create() {
         // code that places background
-        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0)
+        this.starfield_b = this.add.tileSprite(0, 0, 640, 480, 'starfield_b').setOrigin(0, 0)
+        this.starfield_m = this.add.tileSprite(0, 0, 640, 480, 'starfield_m').setOrigin(0, 0)
+        this.starfield_f = this.add.tileSprite(0, 0, 640, 480, 'starfield_f').setOrigin(0, 0)
         
         // code that places borders
         // green UI background
@@ -80,8 +82,10 @@ class Play extends Phaser.Scene {
             this.scene.start("menuScene")
         }
         
-        // scrolling background
-        this.starfield.tilePositionX -= 4
+        // scrolling background (parallax yay)
+        this.starfield_b.tilePositionX -= 1
+        this.starfield_m.tilePositionX -= 2
+        this.starfield_f.tilePositionX -= 4
         
         // keybinds
         keyFIRE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
@@ -102,18 +106,6 @@ class Play extends Phaser.Scene {
         if (this.p1Rocket.y <= borderUISize * 3 + borderPadding) {
             this.p1Rocket.reset()
             this.updateClock(-5)        // -5 seconds on miss
-        }
-    }
-
-    checkCollision(rocket, ship) {
-        // simple AABB checking
-        if (rocket.x < ship.x + ship.width &&
-            rocket.x + rocket.width > ship.x && 
-            rocket.y < ship.y + ship.height &&
-            rocket.height + rocket.y > ship. y) {
-            return true
-        } else {
-            return false
         }
     }
 
