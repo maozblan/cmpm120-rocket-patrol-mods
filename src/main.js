@@ -1,12 +1,13 @@
 /**
  * Lyssa Li
  * Project Name: 
- * Project hours: approx 5
+ * Project hours: approx 12
  * Mods included:
  *      (5pts) create a new enemy spaceship w/ new sprite & new point value that moves faster
  *      (5pts) add time on hit and subtract time on miss
  *      (3pts) a timer with seconds remaining
  *      (3pts) parallax background
+ *      (3pts) animated sprite for enemie ships
  *      (1pts) new tile sprite for background
  * Citations:
  *      how to make a timer https://stackoverflow.com/questions/52063815/how-to-add-countdown-timer-to-phaser-game
@@ -22,7 +23,7 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true
+            // debug: true
         }
     },
     scene: [ Menu, Play ]

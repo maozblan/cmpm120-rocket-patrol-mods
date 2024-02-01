@@ -15,8 +15,8 @@ class Play extends Phaser.Scene {
         // white borders
         this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0)
         this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0)
-        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0)
+        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0).setDepth(1)
+        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0).setDepth(1)
 
         // create rocket (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0)
@@ -26,7 +26,7 @@ class Play extends Phaser.Scene {
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*2, borderUISize*6 + borderPadding, 'spaceship', 0, 20, game.settings.spaceshipSpeed).setOrigin(0,0)
         this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*5, 'spaceship', 0, 10, game.settings.spaceshipSpeed).setOrigin(0,0)
         // fancy ship (x1)
-        this.ship04 = new Spaceship(this, game.config.width + borderUISize*8, borderUISize*3.75, 'fancySpaceship', 0, 70, game.settings.spaceshipSpeed*1.25).setOrigin(0,0)
+        this.ship04 = new Spaceship(this, game.config.width + borderUISize*8, borderUISize*3.75, 'fancyship', 0, 70, game.settings.spaceshipSpeed*1.25).setOrigin(0,0)
 
         // initialize score
         this.p1Score = 0

@@ -6,11 +6,21 @@ class Menu extends Phaser.Scene {
     preload() {
         // load images/tile sprites
         this.load.image('rocket', './assets/rocket.png')
-        this.load.image('spaceship', './assets/spaceship.png')
-        this.load.image('fancySpaceship', './assets/fancyship.png')
         this.load.image('starfield_b', './assets/starfield_b.png')
         this.load.image('starfield_m', './assets/starfield_m.png')
         this.load.image('starfield_f', './assets/starfield_f.png')
+        this.load.spritesheet('spaceship', './assets/fancyship-Sheet.png', {
+            frameWidth: 56,
+            frameHeight: 28,
+            startFrame: 0,
+            endFrame: 5
+        })
+        this.load.spritesheet('fancyship', './assets/smallship-Sheet.png', {
+            frameWidth: 26,
+            frameHeight: 28,
+            startFrame: 0,
+            endFrame: 6
+        })
         this.load.spritesheet('explosion',  './assets/explosion.png', {
             frameWidth: 64,
             frameHeight: 32,
@@ -29,6 +39,18 @@ class Menu extends Phaser.Scene {
         // this.scene.start("playScene")
         
         // configure animation
+        this.anims.create({
+            key: 'spaceship',
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('spaceship', { start: 0, end: 5 }),
+            frameRate: 30
+        });
+        this.anims.create({
+            key: 'fancyship',
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('fancyship', { start: 0, end: 5 }),
+            frameRate: 30
+        });
         this.anims.create({
             key: 'explode',
             frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0}),
