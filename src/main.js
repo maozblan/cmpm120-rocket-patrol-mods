@@ -1,6 +1,6 @@
 /**
  * Lyssa Li
- * Project Name: 
+ * Project Name: Pew Pew Rocket Destruction
  * Project hours: approx 12
  * Mods included:
  *      (5pts) create a new enemy spaceship w/ new sprite & new point value that moves faster
